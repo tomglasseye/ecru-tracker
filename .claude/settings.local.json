@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:claude.ai)",
       "PowerShell(if \\(-not $?\\) { \"Directory is empty or new\" })",
-      "PowerShell(Set-Location \"c:\\\\Users\\\\smkgl\\\\Documents\\\\LocalSites\\\\ecru-tracker\" && npm run dev 2>&1 &)"
+      "PowerShell(Set-Location \"c:\\\\Users\\\\smkgl\\\\Documents\\\\LocalSites\\\\ecru-tracker\" && npm run dev 2>&1 &)",
+      "Bash(npm run *)"
     ]
   }
 }

@@ -213,10 +213,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
           })
         }
       } else if (dr.type === 'move') {
-        if (!dr.moved) {
-          // Treat as a click — open the edit modal
-          setModal({ type: 'edit', entry: dr.onClickEntry })
-        } else {
+        if (dr.moved) {
           const targetDay = dr.days[dr.dayIndex]
           const s = minutesToTime(targetDay, dr.currentStartMin ?? dr.startMin)
           const end = minutesToTime(targetDay, dr.currentEndMin ?? dr.endMin)
@@ -448,6 +445,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
                     onDragMove={(e) => handleEntryDragStart(e, realEntry, 'move')}
                     onDragResizeTop={(e) => handleEntryDragStart(e, realEntry, 'resize-top')}
                     onDragResizeBottom={(e) => handleEntryDragStart(e, realEntry, 'resize-bottom')}
+                    onClickEdit={() => setModal({ type: 'edit', entry: realEntry })}
                     onDelete={() => callbacksRef.current.onDeleteEntry(realEntry.id)}
                   />
                 )
