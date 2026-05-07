@@ -35,13 +35,20 @@ export const handler = async (event) => {
   }
 
   try {
-    const url = `https://${domain}/rest/api/3/search?jql=${encodeURIComponent(jql)}&maxResults=20&fields=summary,status,issuetype`
+    const url = `https://${domain}/rest/api/3/search/jql`
 
     const res = await fetch(url, {
+      method: 'POST',
       headers: {
         Authorization: `Basic ${credentials}`,
+        'Content-Type': 'application/json',
         Accept: 'application/json',
       },
+      body: JSON.stringify({
+        jql,
+        maxResults: 20,
+        fields: ['summary', 'status', 'issuetype'],
+      }),
     })
 
     if (!res.ok) {
