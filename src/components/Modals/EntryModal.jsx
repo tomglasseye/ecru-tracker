@@ -165,11 +165,11 @@ export default function EntryModal({
                 value={ticketKey}
                 onChange={(e) => setTicketKey(e.target.value.toUpperCase())}
                 placeholder="e.g. DEV-123"
-                className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 autoFocus
               />
               {searching && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
               )}
             </div>
 
@@ -185,7 +185,7 @@ export default function EntryModal({
                       selectTicket(t)
                     }}
                   >
-                    <span className="font-mono font-medium text-blue-600 dark:text-blue-400 shrink-0">{t.key}</span>
+                    <span className="font-mono font-medium text-orange-600 dark:text-orange-400 shrink-0">{t.key}</span>
                     <span className="text-gray-600 dark:text-gray-300 truncate">{t.summary}</span>
                   </button>
                 ))}
@@ -204,8 +204,8 @@ export default function EntryModal({
                     onClick={() => selectTicket(t)}
                     className={`px-2.5 py-1 text-xs rounded-full border transition-colors ${
                       ticketKey === t.key
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30'
+                        ? 'bg-orange-500 text-white border-orange-500'
+                        : 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-orange-300 hover:bg-orange-50 dark:hover:bg-orange-900/30'
                     }`}
                     title={t.summary}
                   >
@@ -233,7 +233,7 @@ export default function EntryModal({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add a note about your work..."
               rows={3}
-              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
             />
           </div>
 
@@ -250,7 +250,7 @@ export default function EntryModal({
                 value={startInput}
                 onChange={(e) => setStartInput(e.target.value)}
                 onBlur={(e) => setStartInput(minutesToInputTime(snapMinutes(inputTimeToMinutes(e.target.value))))}
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div className="flex-1">
@@ -261,7 +261,7 @@ export default function EntryModal({
                 value={endInput}
                 onChange={(e) => setEndInput(e.target.value)}
                 onBlur={(e) => setEndInput(minutesToInputTime(snapMinutes(inputTimeToMinutes(e.target.value))))}
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
             </div>
             <div className="text-xs text-gray-500 dark:text-gray-400 pb-2.5 shrink-0">{dur}</div>
@@ -299,7 +299,7 @@ export default function EntryModal({
             <button
               onClick={handleSave}
               disabled={!ticketKey.trim() || saving}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               {saving && <Loader size={13} className="animate-spin" />}
               {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Log time'}

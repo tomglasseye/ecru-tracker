@@ -78,7 +78,7 @@ export default function SettingsPage({ theme, onToggleTheme }) {
                   value={domain}
                   onChange={(e) => setDomain(e.target.value)}
                   placeholder="yourcompany.atlassian.net"
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
 
@@ -91,7 +91,7 @@ export default function SettingsPage({ theme, onToggleTheme }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@yourcompany.com"
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
 
@@ -102,7 +102,7 @@ export default function SettingsPage({ theme, onToggleTheme }) {
                     href="https://id.atlassian.com/manage-profile/security/api-tokens"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                    className="text-xs text-orange-600 dark:text-orange-400 hover:underline flex items-center gap-1"
                   >
                     Get token
                     <ExternalLink size={10} />
@@ -113,7 +113,7 @@ export default function SettingsPage({ theme, onToggleTheme }) {
                   value={token}
                   onChange={(e) => setToken(e.target.value)}
                   placeholder="••••••••••••••••"
-                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
 
@@ -145,7 +145,7 @@ export default function SettingsPage({ theme, onToggleTheme }) {
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 transition-colors"
               >
                 {saved ? 'Saved!' : 'Save'}
               </button>

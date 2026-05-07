@@ -48,7 +48,7 @@ export default function PasswordGate({ children }) {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 w-full max-w-sm overflow-hidden">
         <div className="px-8 py-8 text-center">
-          <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mx-auto mb-4">
             <Lock size={22} className="text-white" />
           </div>
           <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">Ecru Tracker</h1>
@@ -65,7 +65,7 @@ export default function PasswordGate({ children }) {
             className={`w-full px-4 py-2.5 text-sm border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
               error
                 ? 'border-red-400 focus:ring-red-300 bg-red-50 dark:bg-red-900/20'
-                : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-transparent'
+                : 'border-gray-300 dark:border-gray-600 focus:ring-orange-500 focus:border-transparent'
             }`}
           />
           {error && (
@@ -74,7 +74,7 @@ export default function PasswordGate({ children }) {
           <button
             type="submit"
             disabled={!input}
-            className="w-full py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-2.5 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             Continue
           </button>

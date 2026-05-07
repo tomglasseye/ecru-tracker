@@ -330,7 +330,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
         {days.map((day, i) => {
           const tracked = dayTrackedMinutes(day)
           const pct = Math.min(tracked / TARGET_MINUTES, 1)
-          const isFull = tracked >= TARGET_MINUTES
+          const isFull = tracked >= 6 * 60
           return (
             <div key={i} className="flex-1 text-center py-2 border-l border-gray-200 dark:border-gray-700 first:border-l-0">
               <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
@@ -339,7 +339,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
               <div
                 className={`text-xl font-medium mx-auto w-8 h-8 flex items-center justify-center rounded-full mt-0.5 transition-colors ${
                   isToday(day)
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-orange-500 text-white'
                     : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
@@ -347,7 +347,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
               </div>
               <div className="mx-2 mt-1.5 h-1 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all duration-300 ${isFull ? 'bg-emerald-500' : 'bg-blue-500'}`}
+                  className={`h-full rounded-full transition-all duration-300 ${isFull ? 'bg-emerald-500' : 'bg-red-400'}`}
                   style={{ width: `${pct * 100}%` }}
                 />
               </div>
@@ -424,7 +424,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
               {/* Create ghost */}
               {dragging?.type === 'create' && dragging.dayIndex === dayIndex && (
                 <div
-                  className="absolute inset-x-0.5 bg-blue-200 dark:bg-blue-800 border-2 border-blue-400 dark:border-blue-500 rounded opacity-80 pointer-events-none z-10"
+                  className="absolute inset-x-0.5 bg-orange-100 dark:bg-orange-900/60 border-2 border-orange-400 dark:border-orange-500 rounded opacity-80 pointer-events-none z-10"
                   style={{
                     top: minutesToPixels(dragging.startMinutes - START_HOUR * 60),
                     height: Math.max(
@@ -433,7 +433,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
                     ),
                   }}
                 >
-                  <div className="text-xs text-blue-700 dark:text-blue-200 font-medium px-1.5 py-0.5">
+                  <div className="text-xs text-orange-700 dark:text-orange-200 font-medium px-1.5 py-0.5">
                     {formatTime(dragging.startMinutes)} – {formatTime(dragging.endMinutes)}
                   </div>
                 </div>

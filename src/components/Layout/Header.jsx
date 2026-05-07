@@ -10,7 +10,7 @@ export default function Header({ theme, onToggleTheme }) {
   return (
     <header className="flex items-center justify-between px-4 h-12 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shrink-0">
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+        <div className="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
           <Calendar size={13} className="text-white" />
         </div>
         <span className="font-semibold text-gray-900 dark:text-white text-sm">Ecru Tracker</span>

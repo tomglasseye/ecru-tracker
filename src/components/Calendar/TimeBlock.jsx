@@ -156,7 +156,7 @@ export default function TimeBlock({
           style={getTooltipStyle()}
           className="bg-gray-900 dark:bg-gray-800 border border-gray-700 dark:border-gray-600 text-white rounded-xl shadow-2xl p-3 pointer-events-none text-xs"
         >
-          <div className="font-mono font-bold text-blue-300 text-sm">{entry.ticketKey}</div>
+          <div className="font-mono font-bold text-orange-300 text-sm">{entry.ticketKey}</div>
           {entry.summary && (
             <div className="mt-1 font-medium text-white leading-snug">{entry.summary}</div>
           )}
