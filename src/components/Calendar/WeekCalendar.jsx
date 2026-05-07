@@ -345,11 +345,20 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
               >
                 {format(day, 'd')}
               </div>
-              <div className="mx-2 mt-1.5 h-1 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-300 ${isFull ? 'bg-emerald-500' : 'bg-red-400'}`}
-                  style={{ width: `${pct * 100}%` }}
-                />
+              <div className="mx-2 mt-1.5 flex items-center gap-1">
+                <div className="flex-1 h-1 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-300 ${isFull ? 'bg-emerald-500' : 'bg-red-400'}`}
+                    style={{ width: `${pct * 100}%` }}
+                  />
+                </div>
+                {tracked > 0 && (
+                  <span className={`text-[10px] font-medium leading-none shrink-0 ${isFull ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                    {tracked >= 60
+                      ? `${Math.floor(tracked / 60)}h${tracked % 60 ? `${tracked % 60}m` : ''}`
+                      : `${Math.round(tracked)}m`}
+                  </span>
+                )}
               </div>
             </div>
           )
