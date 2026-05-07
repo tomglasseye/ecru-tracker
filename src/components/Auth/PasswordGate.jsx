@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { Lock } from 'lucide-react'
 
 const STORAGE_KEY = 'ecru_auth'
-const CORRECT = import.meta.env.VITE_APP_PASSWORD
+// Trim to avoid issues with accidental whitespace in .env files
+const CORRECT = (import.meta.env.VITE_APP_PASSWORD || '').trim() || null
 
 export function isAuthenticated() {
   if (!CORRECT) return true
@@ -16,9 +17,24 @@ export default function PasswordGate({ children }) {
 
   if (authed) return children
 
+  // No password configured — shouldn't normally reach here, but show a clear message if it does
+  if (!CORRECT) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-sm border w-full max-w-sm p-8 text-center">
+          <p className="text-sm text-gray-600 mb-2">No password configured.</p>
+          <p className="text-xs text-gray-400">
+            Set <code className="bg-gray-100 px-1 rounded">VITE_APP_PASSWORD</code> in your{' '}
+            <code className="bg-gray-100 px-1 rounded">.env</code> file and restart the server.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (input === CORRECT) {
+    if (input.trim() === CORRECT) {
       localStorage.setItem(STORAGE_KEY, CORRECT)
       setAuthed(true)
     } else {
