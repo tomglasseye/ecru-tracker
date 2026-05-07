@@ -254,6 +254,13 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
 
   const isToday = (day) => day.toDateString() === new Date().toDateString()
 
+  const TARGET_MINUTES = 7 * 60
+  function dayTrackedMinutes(day) {
+    return entries
+      .filter((e) => new Date(e.startTime).toDateString() === day.toDateString())
+      .reduce((sum, e) => sum + (new Date(e.endTime) - new Date(e.startTime)) / 60000, 0)
+  }
+
   // Build display entries per day, accounting for cross-day moves
   function getDisplayEntries(dayIndex) {
     const day = days[dayIndex]
@@ -320,22 +327,33 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
       {/* Day headers */}
       <div className="flex border-b border-gray-200 dark:border-gray-700 shrink-0 bg-white dark:bg-gray-900">
         <div className="w-14 shrink-0" />
-        {days.map((day, i) => (
-          <div key={i} className="flex-1 text-center py-2 border-l border-gray-200 dark:border-gray-700 first:border-l-0">
-            <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-              {format(day, 'EEE')}
+        {days.map((day, i) => {
+          const tracked = dayTrackedMinutes(day)
+          const pct = Math.min(tracked / TARGET_MINUTES, 1)
+          const isFull = tracked >= TARGET_MINUTES
+          return (
+            <div key={i} className="flex-1 text-center py-2 border-l border-gray-200 dark:border-gray-700 first:border-l-0">
+              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                {format(day, 'EEE')}
+              </div>
+              <div
+                className={`text-xl font-medium mx-auto w-8 h-8 flex items-center justify-center rounded-full mt-0.5 transition-colors ${
+                  isToday(day)
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                }`}
+              >
+                {format(day, 'd')}
+              </div>
+              <div className="mx-2 mt-1.5 h-1 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${isFull ? 'bg-emerald-500' : 'bg-blue-500'}`}
+                  style={{ width: `${pct * 100}%` }}
+                />
+              </div>
             </div>
-            <div
-              className={`text-xl font-medium mx-auto w-8 h-8 flex items-center justify-center rounded-full mt-0.5 transition-colors ${
-                isToday(day)
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
-              }`}
-            >
-              {format(day, 'd')}
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Scrollable grid */}

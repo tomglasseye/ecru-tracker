@@ -9,6 +9,7 @@ import {
   inputTimeToMinutes,
   minutesToTime,
   formatDuration,
+  snapMinutes,
 } from '../../utils/time'
 
 export default function EntryModal({
@@ -33,10 +34,10 @@ export default function EntryModal({
   const [summary, setSummary] = useState(isEdit ? entry.summary || '' : '')
   const [description, setDescription] = useState(isEdit ? entry.description || '' : '')
   const [startInput, setStartInput] = useState(
-    minutesToInputTime(isEdit ? (new Date(entry.startTime).getHours() * 60 + new Date(entry.startTime).getMinutes()) : startMinutes)
+    minutesToInputTime(snapMinutes(isEdit ? (new Date(entry.startTime).getHours() * 60 + new Date(entry.startTime).getMinutes()) : startMinutes))
   )
   const [endInput, setEndInput] = useState(
-    minutesToInputTime(isEdit ? (new Date(entry.endTime).getHours() * 60 + new Date(entry.endTime).getMinutes()) : endMinutes)
+    minutesToInputTime(snapMinutes(isEdit ? (new Date(entry.endTime).getHours() * 60 + new Date(entry.endTime).getMinutes()) : endMinutes))
   )
 
   const [searchResults, setSearchResults] = useState([])
@@ -245,8 +246,10 @@ export default function EntryModal({
               </label>
               <input
                 type="time"
+                step="900"
                 value={startInput}
                 onChange={(e) => setStartInput(e.target.value)}
+                onBlur={(e) => setStartInput(minutesToInputTime(snapMinutes(inputTimeToMinutes(e.target.value))))}
                 className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -254,8 +257,10 @@ export default function EntryModal({
               <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">End</label>
               <input
                 type="time"
+                step="900"
                 value={endInput}
                 onChange={(e) => setEndInput(e.target.value)}
+                onBlur={(e) => setEndInput(minutesToInputTime(snapMinutes(inputTimeToMinutes(e.target.value))))}
                 className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
