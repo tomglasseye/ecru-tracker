@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { format } from 'date-fns'
-import { X, Trash2, Search, Clock } from 'lucide-react'
+import { X, Trash2, Search, Clock, Loader } from 'lucide-react'
 import { useJira } from '../../hooks/useJira'
 import { useApp } from '../../context/AppContext'
 import { addRecentTicket, loadRecentTickets, getPopularTickets } from '../../utils/storage'
@@ -22,7 +22,9 @@ export default function EntryModal({
   onDelete,
 }) {
   const { entries } = useApp()
-  const { searchTickets, demoTickets } = useJira()
+  const { searchTickets, createWorklog, updateWorklog, hasCredentials, demoTickets } = useJira()
+  const [saving, setSaving] = useState(false)
+  const [syncError, setSyncError] = useState(null)
 
   const isEdit = type === 'edit'
   const baseDay = isEdit ? new Date(entry.startTime) : day
@@ -67,28 +69,49 @@ export default function EntryModal({
     setShowDropdown(false)
   }
 
-  const handleSave = () => {
-    if (!ticketKey.trim()) return
+  const handleSave = async () => {
+    if (!ticketKey.trim() || saving) return
 
     const startMin = inputTimeToMinutes(startInput)
     const endMin = inputTimeToMinutes(endInput)
-
     if (endMin <= startMin) return
 
     const startDate = minutesToTime(baseDay, startMin)
     const endDate = minutesToTime(baseDay, endMin)
 
-    const ticket = { key: ticketKey, summary }
-    addRecentTicket(ticket)
+    addRecentTicket({ key: ticketKey, summary })
+    setSaving(true)
+    setSyncError(null)
 
-    onSave({
+    const newEntry = {
       id: isEdit ? entry.id : crypto.randomUUID(),
       ticketKey,
       summary,
       description,
       startTime: startDate.toISOString(),
       endTime: endDate.toISOString(),
-    })
+      worklogId: isEdit ? entry.worklogId : null,
+    }
+
+    if (hasCredentials) {
+      try {
+        const result = isEdit && entry.worklogId
+          ? await updateWorklog(newEntry)
+          : await createWorklog(newEntry)
+        if (result.worklogId) newEntry.worklogId = result.worklogId
+        if (result.error) setSyncError(`Saved locally — Jira sync failed: ${result.error}`)
+      } catch {
+        setSyncError('Saved locally — could not reach Jira.')
+      }
+    }
+
+    setSaving(false)
+    if (!syncError) {
+      onSave(newEntry)
+    } else {
+      // Save locally even if Jira sync failed
+      onSave(newEntry)
+    }
   }
 
   const dur = formatDuration(inputTimeToMinutes(startInput), inputTimeToMinutes(endInput))
@@ -240,6 +263,13 @@ export default function EntryModal({
           </div>
         </div>
 
+        {/* Sync error */}
+        {syncError && (
+          <div className="mx-5 mb-1 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+            {syncError}
+          </div>
+        )}
+
         {/* Footer */}
         <div className="flex items-center justify-between px-5 py-4 border-t bg-gray-50">
           <div>
@@ -256,16 +286,18 @@ export default function EntryModal({
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg hover:bg-gray-50 transition-colors"
+              disabled={saving}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg hover:bg-gray-50 disabled:opacity-40 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              disabled={!ticketKey.trim()}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              disabled={!ticketKey.trim() || saving}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
-              {isEdit ? 'Save changes' : 'Log time'}
+              {saving && <Loader size={13} className="animate-spin" />}
+              {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Log time'}
             </button>
           </div>
         </div>

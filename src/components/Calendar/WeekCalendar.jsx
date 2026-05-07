@@ -121,6 +121,8 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
       const dayIndex = daysRef.current.findIndex(
         (d) => d.toDateString() === new Date(entry.startTime).toDateString()
       )
+      const startClientX = e.clientX
+      const startClientY = e.clientY
 
       dragRef.current = {
         type,
@@ -130,6 +132,10 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
         dayIndex,
         days: daysRef.current,
         offsetMin: type === 'move' ? yToMinutes(y) - startMin : 0,
+        startClientX,
+        startClientY,
+        moved: false,
+        onClickEntry: type === 'move' ? entry : null,
       }
 
       setDragging({ type, entryId: entry.id, dayIndex, startMinutes: startMin, endMinutes: endMin })
@@ -142,6 +148,13 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
     const handleMouseMove = (e) => {
       const dr = dragRef.current
       if (!dr) return
+
+      // Mark as a real drag once the mouse moves more than 5px
+      if (!dr.moved && dr.startClientX !== undefined) {
+        const dx = Math.abs(e.clientX - dr.startClientX)
+        const dy = Math.abs(e.clientY - dr.startClientY)
+        if (dx > 5 || dy > 5) dr.moved = true
+      }
 
       const y = getRelativeY(e.clientY)
       const curMin = yToMinutes(y)
@@ -200,14 +213,19 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
           })
         }
       } else if (dr.type === 'move') {
-        const targetDay = dr.days[dr.dayIndex]
-        const s = minutesToTime(targetDay, dr.currentStartMin ?? dr.startMin)
-        const end = minutesToTime(targetDay, dr.currentEndMin ?? dr.endMin)
-        callbacksRef.current.onUpdateEntry({
-          ...dr.entry,
-          startTime: s.toISOString(),
-          endTime: end.toISOString(),
-        })
+        if (!dr.moved) {
+          // Treat as a click — open the edit modal
+          setModal({ type: 'edit', entry: dr.onClickEntry })
+        } else {
+          const targetDay = dr.days[dr.dayIndex]
+          const s = minutesToTime(targetDay, dr.currentStartMin ?? dr.startMin)
+          const end = minutesToTime(targetDay, dr.currentEndMin ?? dr.endMin)
+          callbacksRef.current.onUpdateEntry({
+            ...dr.entry,
+            startTime: s.toISOString(),
+            endTime: end.toISOString(),
+          })
+        }
       } else if (dr.type === 'resize-bottom') {
         const endDate = minutesToTime(
           new Date(dr.entry.startTime),
@@ -430,7 +448,6 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
                     onDragMove={(e) => handleEntryDragStart(e, realEntry, 'move')}
                     onDragResizeTop={(e) => handleEntryDragStart(e, realEntry, 'resize-top')}
                     onDragResizeBottom={(e) => handleEntryDragStart(e, realEntry, 'resize-bottom')}
-                    onClick={() => setModal({ type: 'edit', entry: realEntry })}
                     onDelete={() => callbacksRef.current.onDeleteEntry(realEntry.id)}
                   />
                 )

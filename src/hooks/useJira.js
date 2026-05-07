@@ -50,31 +50,51 @@ export function useJira() {
     [hasCredentials, settings]
   )
 
-  const postWorklog = useCallback(
-    async (ticketKey, startTime, endTime, description) => {
+  const callWorklog = useCallback(
+    async (payload) => {
       if (!hasCredentials) return { ok: true, demo: true }
-
-      const started = new Date(startTime)
-        .toISOString()
-        .replace(/\.\d{3}Z$/, '.000+0000')
-        .replace('T', 'T')
-      const timeSpentSeconds = Math.round((new Date(endTime) - new Date(startTime)) / 1000)
-
       const res = await fetch('/api/worklog', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...settings,
-          ticketKey,
-          started,
-          timeSpentSeconds,
-          comment: description || '',
-        }),
+        body: JSON.stringify({ ...settings, ...payload }),
       })
       return res.json()
     },
     [hasCredentials, settings]
   )
 
-  return { searchTickets, postWorklog, hasCredentials, demoTickets: DEMO_TICKETS }
+  const createWorklog = useCallback(
+    (entry) =>
+      callWorklog({
+        action: 'create',
+        ticketKey: entry.ticketKey,
+        started: entry.startTime,
+        timeSpentSeconds: Math.round((new Date(entry.endTime) - new Date(entry.startTime)) / 1000),
+        comment: entry.description || '',
+      }),
+    [callWorklog]
+  )
+
+  const updateWorklog = useCallback(
+    (entry) =>
+      callWorklog({
+        action: 'update',
+        ticketKey: entry.ticketKey,
+        worklogId: entry.worklogId,
+        started: entry.startTime,
+        timeSpentSeconds: Math.round((new Date(entry.endTime) - new Date(entry.startTime)) / 1000),
+        comment: entry.description || '',
+      }),
+    [callWorklog]
+  )
+
+  const deleteWorklog = useCallback(
+    (entry) =>
+      entry.worklogId
+        ? callWorklog({ action: 'delete', ticketKey: entry.ticketKey, worklogId: entry.worklogId })
+        : Promise.resolve({ ok: true }),
+    [callWorklog]
+  )
+
+  return { searchTickets, createWorklog, updateWorklog, deleteWorklog, hasCredentials, demoTickets: DEMO_TICKETS }
 }

@@ -28,7 +28,6 @@ export default function TimeBlock({
   onDragMove,
   onDragResizeTop,
   onDragResizeBottom,
-  onClick,
   onDelete,
 }) {
   const [hovered, setHovered] = useState(false)
@@ -44,7 +43,6 @@ export default function TimeBlock({
       className={`absolute inset-x-0.5 rounded border select-none group ${color} text-white cursor-grab active:cursor-grabbing`}
       style={{ top, height, opacity, zIndex: 10 }}
       onMouseDown={disabled ? undefined : onDragMove}
-      onDoubleClick={disabled ? undefined : onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -61,11 +59,14 @@ export default function TimeBlock({
 
       {/* Content */}
       <div className={`px-1.5 overflow-hidden ${short ? 'py-0.5' : 'pt-2.5 pb-1'}`}>
-        <div className={`font-semibold truncate leading-tight ${short ? 'text-xs' : 'text-xs'}`}>
+        <div className="text-xs font-semibold truncate leading-tight">
           {entry.ticketKey}
         </div>
+        {!short && entry.summary && (
+          <div className="text-xs opacity-90 truncate leading-tight">{entry.summary}</div>
+        )}
         {!short && entry.description && (
-          <div className="text-xs opacity-80 truncate leading-tight">{entry.description}</div>
+          <div className="text-xs opacity-70 truncate leading-tight italic">{entry.description}</div>
         )}
         {!short && (
           <div className="text-xs opacity-60 leading-tight mt-0.5">
