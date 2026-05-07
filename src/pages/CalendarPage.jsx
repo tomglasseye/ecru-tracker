@@ -8,11 +8,21 @@ export default function CalendarPage({ theme, onToggleTheme }) {
   const { entries, createEntry, updateEntry, deleteEntry } = useApp()
   const { deleteWorklog } = useJira()
 
+  const handleUpdate = useCallback(
+    (entry) => {
+      updateEntry(entry)
+      if (entry.worklogId) {
+        updateWorklog(entry).catch(() => {}) // best-effort, don't block UI
+      }
+    },
+    [updateEntry, updateWorklog]
+  )
+
   const handleDelete = useCallback(
     async (id) => {
       const entry = entries.find((e) => e.id === id)
       if (entry?.worklogId) {
-        deleteWorklog(entry).catch(() => {}) // best-effort, don't block UI
+        deleteWorklog(entry).catch(() => {})
       }
       deleteEntry(id)
     },
@@ -26,7 +36,7 @@ export default function CalendarPage({ theme, onToggleTheme }) {
         <WeekCalendar
           entries={entries}
           onCreateEntry={createEntry}
-          onUpdateEntry={updateEntry}
+          onUpdateEntry={handleUpdate}
           onDeleteEntry={handleDelete}
         />
       </div>

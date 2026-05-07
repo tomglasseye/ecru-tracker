@@ -40,7 +40,7 @@ export default function TimeBlock({
   return (
     <div
       data-entry
-      className={`absolute inset-x-0.5 rounded border select-none group ${color} text-white cursor-grab active:cursor-grabbing`}
+      className={`absolute inset-x-0.5 rounded border select-none group overflow-hidden ${color} text-white cursor-grab active:cursor-grabbing`}
       style={{ top, height, opacity, zIndex: 10 }}
       onMouseDown={disabled ? undefined : onDragMove}
       onMouseEnter={() => setHovered(true)}
