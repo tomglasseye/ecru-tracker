@@ -18,6 +18,37 @@ import {
 
 const HOURS = Array.from({ length: TOTAL_HOURS + 1 }, (_, i) => START_HOUR + i)
 
+// Assigns _col and _numCols to each entry so overlapping entries sit side-by-side.
+function layoutEntries(entries) {
+  if (!entries.length) return []
+  const items = entries.map((e) => ({ ...e, _col: 0, _numCols: 1 }))
+  items.sort((a, b) => a.startMin - b.startMin)
+
+  // Union-Find: group transitively-overlapping entries into clusters
+  const parent = items.map((_, i) => i)
+  function find(x) { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x] } return x }
+  function union(x, y) { parent[find(x)] = find(y) }
+  for (let i = 0; i < items.length; i++)
+    for (let j = i + 1; j < items.length; j++)
+      if (items[i].startMin < items[j].endMin && items[i].endMin > items[j].startMin)
+        union(i, j)
+
+  // For each cluster, greedy-assign columns then set numCols = columns used
+  const groups = {}
+  items.forEach((_, i) => { const r = find(i); (groups[r] = groups[r] || []).push(i) })
+  for (const indices of Object.values(groups)) {
+    const group = indices.map((i) => items[i]).sort((a, b) => a.startMin - b.startMin)
+    const colEnds = []
+    for (const item of group) {
+      let col = colEnds.findIndex((end) => end <= item.startMin)
+      if (col === -1) { col = colEnds.length; colEnds.push(item.endMin) } else colEnds[col] = item.endMin
+      item._col = col
+    }
+    for (const item of group) item._numCols = colEnds.length
+  }
+  return items
+}
+
 function formatHourLabel(h) {
   if (h === 0) return ''
   if (h === 12) return '12 PM'
@@ -384,11 +415,26 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
         {days.map((day, dayIndex) => {
           const displayEntries = getDisplayEntries(dayIndex)
 
+          // Pre-compute effective minutes then assign overlap columns
+          const laidOut = layoutEntries(
+            displayEntries.map((entry) => {
+              const isMoved = entry._state === 'moved-here'
+              const isResizingTop = dragging?.type === 'resize-top' && dragging.entryId === entry.id
+              const isResizingBottom = dragging?.type === 'resize-bottom' && dragging.entryId === entry.id
+              let startMin = timeToMinutes(new Date(entry.startTime))
+              let endMin = timeToMinutes(new Date(entry.endTime))
+              if (isMoved) { startMin = dragging.startMinutes; endMin = dragging.endMinutes }
+              else if (isResizingTop) startMin = dragging.startMinutes
+              else if (isResizingBottom) endMin = dragging.endMinutes
+              return { ...entry, startMin, endMin }
+            })
+          )
+
           return (
             <div
               key={dayIndex}
               data-day-col={dayIndex}
-              className={`flex-1 relative border-l border-gray-200 dark:border-gray-700 ${isToday(day) ? 'bg-blue-50/30 dark:bg-blue-900/10' : 'bg-white dark:bg-gray-900'}`}
+              className={`flex-1 relative border-l border-gray-200 dark:border-gray-700 ${isToday(day) ? 'bg-orange-50/20 dark:bg-orange-900/5' : 'bg-white dark:bg-gray-900'}`}
               style={{ height: GRID_HEIGHT, cursor: 'crosshair', userSelect: 'none' }}
               onMouseDown={(e) => handleGridMouseDown(e, dayIndex)}
             >
@@ -449,36 +495,19 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
               )}
 
               {/* Entries */}
-              {displayEntries.map((entry) => {
-                const isMoved = entry._state === 'moved-here'
+              {laidOut.map((entry) => {
                 const isGhost = entry._state === 'ghost'
-                const isResizingTop =
-                  dragging?.type === 'resize-top' && dragging.entryId === entry.id
-                const isResizingBottom =
-                  dragging?.type === 'resize-bottom' && dragging.entryId === entry.id
-
-                let startMin = timeToMinutes(new Date(entry.startTime))
-                let endMin = timeToMinutes(new Date(entry.endTime))
-
-                if (isMoved) {
-                  startMin = dragging.startMinutes
-                  endMin = dragging.endMinutes
-                } else if (isResizingTop) {
-                  startMin = dragging.startMinutes
-                } else if (isResizingBottom) {
-                  endMin = dragging.endMinutes
-                }
-
                 const realEntry = entries.find((e) => e.id === entry.id) || entry
-
                 return (
                   <TimeBlock
                     key={`${entry.id}-${entry._state}`}
                     entry={realEntry}
-                    startMin={startMin}
-                    endMin={endMin}
+                    startMin={entry.startMin}
+                    endMin={entry.endMin}
                     opacity={isGhost ? 0.3 : 1}
                     disabled={isGhost}
+                    colIndex={entry._col}
+                    numCols={entry._numCols}
                     onDragMove={(e) => handleEntryDragStart(e, realEntry, 'move')}
                     onDragResizeTop={(e) => handleEntryDragStart(e, realEntry, 'resize-top')}
                     onDragResizeBottom={(e) => handleEntryDragStart(e, realEntry, 'resize-bottom')}

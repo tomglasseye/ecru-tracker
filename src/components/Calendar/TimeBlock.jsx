@@ -26,6 +26,8 @@ export default function TimeBlock({
   endMin,
   opacity = 1,
   disabled = false,
+  colIndex = 0,
+  numCols = 1,
   onDragMove,
   onDragResizeTop,
   onDragResizeBottom,
@@ -39,6 +41,8 @@ export default function TimeBlock({
   const top = minutesToPixels(startMin - START_HOUR * 60)
   const height = Math.max(minutesToPixels(endMin - startMin), 20)
   const color = ticketColor(entry.ticketKey)
+  const leftPct = (colIndex / numCols) * 100
+  const widthPct = (1 / numCols) * 100
   const short = height < 44
   const veryShort = height < 26
 
@@ -79,8 +83,15 @@ export default function TimeBlock({
       <div
         ref={blockRef}
         data-entry
-        className={`absolute inset-x-0.5 rounded border select-none overflow-hidden flex ${color} text-white`}
-        style={{ top, height, opacity, zIndex: 10 }}
+        className={`absolute rounded border select-none overflow-hidden flex ${color} text-white`}
+        style={{
+          top,
+          height,
+          opacity,
+          zIndex: 10,
+          left: `calc(${leftPct}% + 2px)`,
+          width: `calc(${widthPct}% - 4px)`,
+        }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
