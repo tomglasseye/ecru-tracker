@@ -6,7 +6,7 @@ import { useJira } from '../hooks/useJira'
 
 export default function CalendarPage({ theme, onToggleTheme }) {
   const { entries, createEntry, updateEntry, deleteEntry } = useApp()
-  const { deleteWorklog } = useJira()
+  const { updateWorklog, deleteWorklog } = useJira()
 
   const handleUpdate = useCallback(
     (entry) => {
