@@ -373,11 +373,21 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
                   style={{ top: (h - START_HOUR) * HOUR_HEIGHT }}
                 />
               ))}
+              {/* Quarter-hour lines (15 min and 45 min marks) */}
+              {HOURS.slice(0, -1).flatMap((h) =>
+                [1, 3].map((q) => (
+                  <div
+                    key={`${h}q${q}`}
+                    className="absolute inset-x-0 border-t border-gray-100/60 dark:border-gray-800/40"
+                    style={{ top: (h - START_HOUR) * HOUR_HEIGHT + (q * HOUR_HEIGHT) / 4 }}
+                  />
+                ))
+              )}
               {/* Half-hour lines */}
               {HOURS.slice(0, -1).map((h) => (
                 <div
                   key={`${h}h`}
-                  className="absolute inset-x-0 border-t border-gray-50 dark:border-gray-800/50"
+                  className="absolute inset-x-0 border-t border-gray-100 dark:border-gray-800/70"
                   style={{ top: (h - START_HOUR) * HOUR_HEIGHT + HOUR_HEIGHT / 2 }}
                 />
               ))}
