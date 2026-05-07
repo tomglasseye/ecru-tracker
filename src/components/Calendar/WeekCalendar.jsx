@@ -292,47 +292,47 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-white">
+    <div className="flex flex-col h-full overflow-hidden bg-white dark:bg-gray-900">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 px-4 py-2 border-b shrink-0">
+      <div className="flex items-center gap-3 px-4 py-2 border-b border-gray-200 dark:border-gray-700 shrink-0">
         <button
           onClick={goToday}
-          className="px-3 py-1 text-sm font-medium border rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-3 py-1 text-sm font-medium border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           Today
         </button>
         <div className="flex items-center gap-1">
           <button
             onClick={prevWeek}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <ChevronLeft size={16} />
           </button>
           <button
             onClick={nextWeek}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <ChevronRight size={16} />
           </button>
         </div>
-        <span className="text-sm font-semibold text-gray-800">
+        <span className="text-sm font-semibold text-gray-800 dark:text-white">
           {format(weekStart, 'MMMM yyyy')}
         </span>
       </div>
 
       {/* Day headers */}
-      <div className="flex border-b shrink-0 bg-white">
+      <div className="flex border-b border-gray-200 dark:border-gray-700 shrink-0 bg-white dark:bg-gray-900">
         <div className="w-14 shrink-0" />
         {days.map((day, i) => (
-          <div key={i} className="flex-1 text-center py-2 border-l first:border-l-0">
-            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+          <div key={i} className="flex-1 text-center py-2 border-l border-gray-200 dark:border-gray-700 first:border-l-0">
+            <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
               {format(day, 'EEE')}
             </div>
             <div
               className={`text-xl font-medium mx-auto w-8 h-8 flex items-center justify-center rounded-full mt-0.5 transition-colors ${
                 isToday(day)
                   ? 'bg-blue-600 text-white'
-                  : 'text-gray-800 hover:bg-gray-100'
+                  : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
               }`}
             >
               {format(day, 'd')}
@@ -344,11 +344,11 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
       {/* Scrollable grid */}
       <div ref={scrollRef} className="flex flex-1 overflow-auto">
         {/* Time labels */}
-        <div className="w-14 shrink-0 relative" style={{ height: GRID_HEIGHT }}>
+        <div className="w-14 shrink-0 relative bg-white dark:bg-gray-900" style={{ height: GRID_HEIGHT }}>
           {HOURS.slice(0, -1).map((h) => (
             <div
               key={h}
-              className="absolute right-2 text-xs text-gray-400 leading-none"
+              className="absolute right-2 text-xs text-gray-400 dark:text-gray-600 leading-none"
               style={{ top: (h - START_HOUR) * HOUR_HEIGHT - 7 }}
             >
               {formatHourLabel(h)}
@@ -364,7 +364,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
             <div
               key={dayIndex}
               data-day-col={dayIndex}
-              className={`flex-1 relative border-l ${isToday(day) ? 'bg-blue-50/30' : ''}`}
+              className={`flex-1 relative border-l border-gray-200 dark:border-gray-700 ${isToday(day) ? 'bg-blue-50/30 dark:bg-blue-900/10' : 'bg-white dark:bg-gray-900'}`}
               style={{ height: GRID_HEIGHT, cursor: 'crosshair', userSelect: 'none' }}
               onMouseDown={(e) => handleGridMouseDown(e, dayIndex)}
             >
@@ -372,7 +372,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
               {HOURS.map((h) => (
                 <div
                   key={h}
-                  className="absolute inset-x-0 border-t border-gray-100"
+                  className="absolute inset-x-0 border-t border-gray-100 dark:border-gray-800"
                   style={{ top: (h - START_HOUR) * HOUR_HEIGHT }}
                 />
               ))}
@@ -380,7 +380,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
               {HOURS.slice(0, -1).map((h) => (
                 <div
                   key={`${h}h`}
-                  className="absolute inset-x-0 border-t border-gray-50"
+                  className="absolute inset-x-0 border-t border-gray-50 dark:border-gray-800/50"
                   style={{ top: (h - START_HOUR) * HOUR_HEIGHT + HOUR_HEIGHT / 2 }}
                 />
               ))}
@@ -399,7 +399,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
               {/* Create ghost */}
               {dragging?.type === 'create' && dragging.dayIndex === dayIndex && (
                 <div
-                  className="absolute inset-x-0.5 bg-blue-200 border-2 border-blue-400 rounded opacity-80 pointer-events-none z-10"
+                  className="absolute inset-x-0.5 bg-blue-200 dark:bg-blue-800 border-2 border-blue-400 dark:border-blue-500 rounded opacity-80 pointer-events-none z-10"
                   style={{
                     top: minutesToPixels(dragging.startMinutes - START_HOUR * 60),
                     height: Math.max(
@@ -408,7 +408,7 @@ export default function WeekCalendar({ entries, onCreateEntry, onUpdateEntry, on
                     ),
                   }}
                 >
-                  <div className="text-xs text-blue-700 font-medium px-1.5 py-0.5">
+                  <div className="text-xs text-blue-700 dark:text-blue-200 font-medium px-1.5 py-0.5">
                     {formatTime(dragging.startMinutes)} – {formatTime(dragging.endMinutes)}
                   </div>
                 </div>

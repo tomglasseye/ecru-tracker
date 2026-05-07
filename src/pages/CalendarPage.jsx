@@ -4,7 +4,7 @@ import WeekCalendar from '../components/Calendar/WeekCalendar'
 import { useApp } from '../context/AppContext'
 import { useJira } from '../hooks/useJira'
 
-export default function CalendarPage() {
+export default function CalendarPage({ theme, onToggleTheme }) {
   const { entries, createEntry, updateEntry, deleteEntry } = useApp()
   const { deleteWorklog } = useJira()
 
@@ -21,7 +21,7 @@ export default function CalendarPage() {
 
   return (
     <div className="flex flex-col h-screen">
-      <Header />
+      <Header theme={theme} onToggleTheme={onToggleTheme} />
       <div className="flex-1 overflow-hidden">
         <WeekCalendar
           entries={entries}

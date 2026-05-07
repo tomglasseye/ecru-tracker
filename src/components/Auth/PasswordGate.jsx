@@ -45,14 +45,14 @@ export default function PasswordGate({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-sm border w-full max-w-sm overflow-hidden">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 w-full max-w-sm overflow-hidden">
         <div className="px-8 py-8 text-center">
           <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
             <Lock size={22} className="text-white" />
           </div>
-          <h1 className="text-xl font-semibold text-gray-900 mb-1">Ecru Tracker</h1>
-          <p className="text-sm text-gray-500">Enter the team password to continue</p>
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">Ecru Tracker</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Enter the team password to continue</p>
         </div>
 
         <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-3">
@@ -62,14 +62,14 @@ export default function PasswordGate({ children }) {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Password"
             autoFocus
-            className={`w-full px-4 py-2.5 text-sm border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+            className={`w-full px-4 py-2.5 text-sm border rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-colors ${
               error
-                ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                : 'focus:ring-blue-500 focus:border-transparent'
+                ? 'border-red-400 focus:ring-red-300 bg-red-50 dark:bg-red-900/20'
+                : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-transparent'
             }`}
           />
           {error && (
-            <p className="text-xs text-red-600 text-center">Incorrect password — try again</p>
+            <p className="text-xs text-red-600 dark:text-red-400 text-center">Incorrect password — try again</p>
           )}
           <button
             type="submit"
