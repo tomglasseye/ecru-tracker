@@ -15,8 +15,9 @@ const PALETTE = [
 ]
 
 function ticketColor(key) {
+  const prefix = (key || '').split('-')[0]
   let hash = 0
-  for (const ch of key || '') hash = ((hash << 5) - hash + ch.charCodeAt(0)) | 0
+  for (const ch of prefix) hash = ((hash << 5) - hash + ch.charCodeAt(0)) | 0
   return PALETTE[Math.abs(hash) % PALETTE.length]
 }
 
