@@ -32,8 +32,13 @@ export const handler = async (event) => {
 			// Exact key e.g. "VAR-1398" — direct lookup + text fallback
 			jql = `key = "${qUpper}" OR text ~ "${q}" ORDER BY updated DESC`;
 		} else if (/^[A-Z]+-\d+/.test(qUpper)) {
-			// Partial key e.g. "VAR-13" — wildcard key match
+			// Partial key with digits e.g. "VAR-13" — wildcard key match
 			jql = `key ~ "${qUpper}*" OR text ~ "${q}" ORDER BY updated DESC`;
+		} else if (/^([A-Z]+)-\d*$/.test(qUpper)) {
+			// Project prefix + hyphen, no/incomplete digits e.g. "INTERNAL-"
+			// Strip the trailing hyphen to get the project key
+			const project = qUpper.replace(/-\d*$/, "");
+			jql = `project = "${project}" OR key ~ "${project}-*" ORDER BY updated DESC`;
 		} else if (/^[A-Z]+$/.test(qUpper)) {
 			// Project prefix only e.g. "VAR" — search that project first, then text
 			jql = `project = "${qUpper}" OR key ~ "${qUpper}-*" OR text ~ "${q}" ORDER BY updated DESC`;
